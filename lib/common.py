@@ -60,14 +60,26 @@ def set_theme(theme_name, uid):
     return False
 
 
-def get_remote_path(vendor, dname, theme, base_dir, count):
+def zip_files(rid):
 
-    cur_date = datetime.datetime.now().strftime("%Y%m%d")
-    now = datetime.datetime.now().strftime("%H%M")
-    if count == 0:
-        parent_path = os.path.join('/diskb/picture', vendor, dname, cur_date+now, theme).replace("\\", '/')
-    else:
-        parent_path = os.path.join(base_dir, theme).replace('\\', '/')
+    orig_path = querydb.get_run_info(rid, 'image_path')
+    dest_file = os.path.join(orig_path, querydb.get_run_info(rid, 'zip_file')).replace('\\', '/')
+
+    ip = common_config.getValue('IMAGEHOST', 'ip')
+    username = common_config.getValue('IMAGEHOST', 'username')
+    passwd = common_config.getValue('IMAGEHOST', 'passwd')
+    host = ssh.SSHAction(ip, username, passwd)
+
+    try:
+        host.zipfiles(dest_file, orig_path)
+        host.close()
+    except Exception, ex:
+        print ex
+
+
+def get_remote_path(base_dir, theme):
+
+    parent_path = os.path.join('/diskb' + base_dir, theme).replace("\\", '/')
 
     ip = common_config.getValue('IMAGEHOST', 'ip')
     username = common_config.getValue('IMAGEHOST', 'username')
@@ -171,5 +183,7 @@ def screenshots(app_name, img_count):
 
 
 if __name__ == '__main__':
+
+    zip_files('/diskb/picture/vivo/db6964a4/201805221455/Aa云想衣裳花想容', 'db6964a4', 'vivo')
 
     pass

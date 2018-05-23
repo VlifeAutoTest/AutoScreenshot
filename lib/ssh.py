@@ -32,6 +32,15 @@ class SSHAction(object):
         except Exception, ex:
             print ex
 
+    def zipfiles(self, dest_file_name, orig_path):
+
+        try:
+            cmd = ' '.join(['zip', dest_file_name, orig_path])
+            tdin, stdout, stderr = self.ssh.exec_command(cmd)
+            print stderr.read()
+        except Exception, ex:
+            print ex
+
     def upload_file(self, orig_file, remote_file):
 
         try:

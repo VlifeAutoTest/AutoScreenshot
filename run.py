@@ -7,11 +7,23 @@ import argparse
 import os
 import pytest
 import time
+import json
 
 from lib import adbtools
 from lib import configuration
 from lib import common
 from lib import querydb
+
+
+def get_test_info(rid):
+
+    run_info = querydb.get_run_info(rid, 'run_info')
+    value = json.loads(run_info)
+    themes = map(lambda x: querydb.get_theme_name(x), value["themes"])
+    files = value["apps"]
+
+    return themes, files
+
 
 if __name__ == '__main__':
 
@@ -23,52 +35,76 @@ if __name__ == '__main__':
     uid = args.uid
     vendor = args.vendor.lower()
 
-    if uid is None or vendor is None:
+    # insert run info to database, get runid, it will be completed in foreground web
+    # ********The following line will be delete after web is completed***************
+    cur_run_id = querydb.insert_run_info(uid, vendor)
+    # **********************
+
+
+    # verify if device can be used
+    device = adbtools.AdbTools()
+    devices = device.get_devices()
+    mobile_status = querydb.get_mobile_info(vendor, uid, 'status').lower()
+    if uid not in devices or mobile_status == 'block':
+        print "Device can not be used, please check"
+        querydb.update_run_status(cur_run_id, 'Device is not ready', 'Failed')
         sys.exit(0)
 
-    # verify if device is connected
-    device_conn = adbtools.AdbTools()
-    devices = device_conn.get_devices()
-    if uid not in devices:
-        print "Device is not connected, please check"
-        sys.exit(0)
 
-    # check configuration file and config parameters
+    # update mobile table to 'BLOCK'
+    mobile_id = querydb.get_run_info(cur_run_id, 'mobile_id')
+    querydb.update_mobile_status(mobile_id, 'block')
 
+    # set config file for different mobile
     cfg_file = os.path.join('config/', vendor + '.ini')
+    cfg = configuration.configuration()
+    cfg.fileConfig(cfg_file)
+    if uid not in cfg.getSections():
+        cfg.setValue(uid, 'remote_image_path', '')
 
-    if not os.path.isfile(cfg_file):
-        print "Corresponding vendor file is not exist, please check"
-        sys.exit(0)
-    else:
-        cfg = configuration.configuration()
-        cfg.fileConfig(cfg_file)
-        if uid not in cfg.getSections():
-            cfg.setValue(uid, 'remote_image_path', '')
+    try:
 
-    # get all screensshot according to different theme
-    count = 0
-    for theme in querydb.get_all_themes():
+        # start testing
+        test_file_dir = os.path.abspath(os.path.join('vendors/', vendor))
+        remote_img_path = ''
+        theme_list, test_files_list = get_test_info(cur_run_id)
+        basic_img_path = querydb.get_run_info(cur_run_id, 'image_path')
+        for theme in theme_list:
 
-        # 设置theme
-        flag = common.set_theme(theme, uid)
-        if flag:
-            # create image file and set value in cfg file
-            base_dir = '/'.join(cfg.getValue(uid, 'remote_image_path').split('/')[0:-1])
-            remote_img_path = common.get_remote_path(vendor, uid, theme, base_dir, count)
-            cfg.setValue(uid, 'remote_image_path', remote_img_path)
+            # 设置theme
+            flag = common.set_theme(theme, uid)
+            if flag:
+                # create image file and set value in cfg file
+                remote_img_path = common.get_remote_path(basic_img_path, theme)
+                cfg.setValue(uid, 'remote_image_path', remote_img_path)
 
-            # run all test files
-            test_dir = os.path.abspath(os.path.join('vendors/', vendor))
-            test_files = cfg.getValue('COMMON', 'testfiles')
-            if test_files == '':
-                pytest.main(test_dir)
+                if len(test_files_list) > 0:
+                    for fi in test_files_list:
+                        if isinstance(fi, unicode):
+                            fi = fi.encode('gbk')
+                        full_path = os.path.join(test_file_dir, fi)
+                        if os.path.isfile(full_path):
+                            pytest.main('-q ' + full_path)
+                        else:
+                            print 'test file {0} is not found!!!!!'.format(full_path)
+                else:
+                    pytest.main(test_file_dir)
             else:
-                for tf in test_files.split(';'):
-                    test_file = os.path.join(test_dir, tf)
-                    pytest.main('-q ' + test_file)
-        else:
-            print 'theme name is not found!!!!!!!!'
+                print 'theme name {0} is not found!!!!!!!!'.format(theme.encode('gbk'))
+                device.send_keyevent(adbtools.KeyCode.KEYCODE_HOME)
+                time.sleep(2)
 
-        time.sleep(2)
-        count += 1
+            time.sleep(2)
+        # zip image files after finishing test.
+        common.zip_files(cur_run_id)
+        message = 'Test is finished'
+        status = 'Success'
+    except Exception, ex:
+        message = ex
+        status = 'Failed'
+
+    # update run info
+    querydb.update_run_status(cur_run_id, message, status)
+
+    # update device info
+    querydb.update_mobile_status(mobile_id, 'unknown')
