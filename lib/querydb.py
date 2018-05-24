@@ -17,9 +17,10 @@ def insert_image_to_db(app_name, uid, vendor, file_path):
 
         # get mobile id
         mobile_id = get_mobile_info(vendor, uid, 'id')
+        vendor_id = get_vendor_id(vendor)
 
         # get app id
-        query = 'select id  from application where name="{0}" and mobile_id={1} '.format(app_name, mobile_id)
+        query = 'select id  from applications where name="{0}" and vendor_id={1} '.format(app_name, vendor_id)
         result = db.select_one_record(query)
         app_id = str(result[0]['id'])
 
@@ -49,10 +50,11 @@ def insert_run_info(uid, vendor):
     zip_file = '_'.join([vendor, uid, cur_date]) + '.zip'
     image_path = os.path.join('/picture', vendor, uid, cur_date).replace("\\", '/')
     mobile_id = get_mobile_info(vendor, uid, 'id')
+    vendor_id = get_vendor_id(vendor)
 
     # set run_info
     run_info = {}
-    apps = get_all_application(mobile_id)
+    apps = get_all_application(vendor_id)
     new_apps = map(lambda x: 'test_' + x + '.py', apps)
     run_info["apps"] = new_apps
     run_info["themes"] = get_all_themes_info('id')
@@ -150,10 +152,10 @@ def get_theme_name(theme_id):
     return ret
 
 
-def get_all_application(mobile_id):
+def get_all_application(vendor_id):
 
     applications = []
-    query = 'select name from application where mobile_id={0}'.format(mobile_id)
+    query = 'select name from applications where vendor_id={0}'.format(vendor_id)
     result = db.select_many_record(query)
 
     for re in result:
@@ -162,6 +164,19 @@ def get_all_application(mobile_id):
 
     return applications
 
+
+def get_vendor_id(vendor_name):
+
+    ret = ''
+    try:
+        # get theme name
+        query = 'select id from vendor where name = "{0}"'.format(vendor_name)
+        result = db.select_one_record(query)
+        ret = result[0]['id']
+    except Exception, ex:
+        print ex
+
+    return ret
 
 
 if __name__ == '__main__':
