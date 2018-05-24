@@ -62,7 +62,7 @@ def set_theme(theme_name, uid):
 
 def zip_files(rid):
 
-    orig_path = querydb.get_run_info(rid, 'image_path')
+    orig_path = '/diskb' + querydb.get_run_info(rid, 'image_path')
     dest_file = os.path.join(orig_path, querydb.get_run_info(rid, 'zip_file')).replace('\\', '/')
 
     ip = common_config.getValue('IMAGEHOST', 'ip')
