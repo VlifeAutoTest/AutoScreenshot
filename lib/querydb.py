@@ -94,7 +94,7 @@ def get_run_info(runid, field):
 def update_run_status(runid, message, status):
 
     try:
-        query = 'update run_info set status = "{0}" , log= "{1}", where run_id = {2}'.format(status, message, str(runid))
+        query = 'update runinfo set status = "{0}",log_path= "{1}" where run_id = {2}'.format(status, message, str(runid))
         db.execute_update(query)
     except Exception, ex:
         print ex

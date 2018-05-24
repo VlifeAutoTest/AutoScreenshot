@@ -27,6 +27,7 @@ def get_test_info(rid):
 
 if __name__ == '__main__':
 
+
     newParser = argparse.ArgumentParser()
     newParser.add_argument("-s", dest="uid", type=str, help="your device name")
     newParser.add_argument("-v", dest="vendor", type=str, help="mobile vendor")
@@ -61,6 +62,9 @@ if __name__ == '__main__':
     cfg.fileConfig(cfg_file)
     if uid not in cfg.getSections():
         cfg.setValue(uid, 'remote_image_path', '')
+
+    message = ''
+    status = ''
 
     try:
 
