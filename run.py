@@ -54,7 +54,7 @@ if __name__ == '__main__':
 
     # update mobile table to 'BLOCK'
     mobile_id = querydb.get_run_info(cur_run_id, 'mobile_id')
-    querydb.update_mobile_status(mobile_id, 'block')
+    # querydb.update_mobile_status(mobile_id, 'block')
 
     # set config file for different mobile
     cfg_file = os.path.join('config/', vendor + '.ini')
@@ -95,6 +95,8 @@ if __name__ == '__main__':
                     pytest.main(test_file_dir)
             else:
                 print 'theme name {0} is not found!!!!!!!!'.format(theme.encode('gbk'))
+                device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
+                time.sleep(2)
                 device.send_keyevent(adbtools.KeyCode.KEYCODE_HOME)
                 time.sleep(2)
 
