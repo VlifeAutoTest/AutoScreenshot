@@ -63,7 +63,8 @@ def set_theme(theme_name, uid):
 def zip_files(rid):
 
     orig_path = '/diskb' + querydb.get_run_info(rid, 'image_path')
-    dest_file = os.path.join(orig_path, querydb.get_run_info(rid, 'zip_file')).replace('\\', '/')
+    fre_path = os.path.dirname(orig_path)
+    dest_file = os.path.join(fre_path, querydb.get_run_info(rid, 'zip_file')).replace('\\', '/')
 
     ip = common_config.getValue('IMAGEHOST', 'ip')
     username = common_config.getValue('IMAGEHOST', 'username')
@@ -72,6 +73,9 @@ def zip_files(rid):
 
     try:
         host.zipfiles(dest_file, orig_path)
+        # mv file to orig_path
+        cmd = 'mv {0} {1}'.format(dest_file, orig_path)
+        host.run_ssh_command(cmd)
         host.close()
     except Exception, ex:
         print ex
@@ -112,7 +116,7 @@ def unlock_screen(dname):
     device.send_keyevent(26)
 
     # unlock screen
-    cmd = 'input swipe {0} {1} {2} {3}'.format(int(width/6), (int(height/7*6)), int(width/6*5), (int(height/7*6)))
+    cmd = 'input swipe {0} {1} {2} {3}'.format(int(width/2), (int(height/7*6)), int(width/6*5), (int(height/7*6)))
     device.shell(cmd)
 
 
