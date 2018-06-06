@@ -41,7 +41,6 @@ if __name__ == '__main__':
     cur_run_id = querydb.insert_run_info(uid, vendor)
     # **********************
 
-
     # verify if device can be used
     device = adbtools.AdbTools()
     devices = device.get_devices()
@@ -73,7 +72,7 @@ if __name__ == '__main__':
         remote_img_path = ''
         theme_list, test_files_list = get_test_info(cur_run_id)
         basic_img_path = querydb.get_run_info(cur_run_id, 'image_path')
-        for theme in theme_list:
+        for theme in [u'海星宝宝体', u'软萌体', u'水上乐园', u'DroidSansChinese']:
 
             # 设置theme
             flag = common.set_theme(theme, uid)
