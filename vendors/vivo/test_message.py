@@ -42,6 +42,10 @@ class TestMessage(unittest.TestCase):
         app_name = 'message'
 
         try:
+            cmd = 'am force-stop {0} '.format(
+                'com.android.mms')
+            self.device.shell(cmd)
+            time.sleep(5)
             self.device.start_application('com.android.mms/.ui.ConversationList')
             time.sleep(2)
             common.screenshots(app_name, img_count)
@@ -50,6 +54,7 @@ class TestMessage(unittest.TestCase):
             # check message info
             cmd = 'input tap {0} {1}'.format(int(self.width/2), (int(self.height/5)))
             self.device.shell(cmd)
+            time.sleep(2)
             common.screenshots(app_name, img_count)
             self.assertEqual(1, 1)
         except Exception, ex:

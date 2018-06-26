@@ -10,6 +10,7 @@ try:
 except(ImportError):
     import unittest
 from lib import common, adbtools
+from lib import myuiautomator
 
 DEVICE_NAME = sys.argv[2]
 
@@ -42,6 +43,10 @@ class TestDial(unittest.TestCase):
         app_name = 'dial'
 
         try:
+            cmd = 'am force-stop {0} '.format(
+                'com.android.dialer')
+            self.device.shell(cmd)
+            time.sleep(5)
             self.device.start_application('com.android.dialer/.BBKTwelveKeyDialer')
             time.sleep(2)
             common.screenshots(app_name, img_count)
@@ -51,6 +56,9 @@ class TestDial(unittest.TestCase):
             cmd = 'input swipe {0} {1} {2} {3}'.format(
                 int(self.width/2), (int(self.height/2)), int(self.width/2), (int(self.height/2) + 300))
             self.device.shell(cmd)
+            time.sleep(2)
+            myuiautomator.click_popup_window(DEVICE_NAME, [u'未接'])
+            time.sleep(2)
             common.screenshots(app_name, img_count)
             self.assertEqual(1, 1)
         except Exception, ex:

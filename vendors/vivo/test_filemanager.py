@@ -39,37 +39,49 @@ class TestBrowser(unittest.TestCase):
         self.device.send_keyevent(adbtools.KeyCode.KEYCODE_HOME)
         time.sleep(2)
 
-    def test_browser(self):
+    def test_filemanager(self):
 
         img_count = 0
-        app_name = 'browser'
+        app_name = 'filemanager'
 
         try:
             cmd = 'am force-stop {0} '.format(
-                'com.vivo.browser')
+                'com.android.filemanager')
             self.device.shell(cmd)
             time.sleep(5)
-            self.device.start_application('com.vivo.browser/.MainActivity')
-            time.sleep(5)
+            self.device.start_application('com.android.filemanager/.FileManagerActivity')
+            time.sleep(2)
             common.screenshots(app_name, img_count)
             img_count += 1
 
-            # check baidu web
-            myuiautomator.click_element_by_name(DEVICE_NAME, u'搜索或输入网址')
-            time.sleep(1)
-            self.device.shell('input text baidu.com')
-            time.sleep(1)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_ENTER)
-            time.sleep(10)
-            common.screenshots(app_name, img_count)
-            img_count += 1
             time.sleep(2)
             cmd = 'input tap {0} {1}'.format(
-                int(self.width / 2), (int(self.height / 5*4)))
+                int(self.width / 4), (int(self.height / 4)))
             self.device.shell(cmd)
-            time.sleep(5)
+            time.sleep(2)
             common.screenshots(app_name, img_count)
             img_count += 1
+
+            time.sleep(2)
+            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
+            time.sleep(2)
+            cmd = 'input tap {0} {1}'.format(
+                int(self.width / 4), (int(self.height / 5 * 2)))
+            self.device.shell(cmd)
+            time.sleep(2)
+            common.screenshots(app_name, img_count)
+            img_count += 1
+
+            time.sleep(2)
+            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
+            time.sleep(2)
+            cmd = 'input tap {0} {1}'.format(
+                int(self.width / 2), (int(self.height / 5 * 4)))
+            self.device.shell(cmd)
+            time.sleep(2)
+            common.screenshots(app_name, img_count)
+            img_count += 1
+
             self.assertEqual(1, 1)
         except Exception, ex:
             print ex

@@ -1,23 +1,18 @@
-#! /usr/bin/python
-# -*- coding: utf-8 -*-
-__author__ = 'Xuxh'
-
-
-import time
+__author__ = 'Administrator'
 import sys
-reload(sys)
-sys.setdefaultencoding( "utf-8" )
+import time
 try:
     import unittest2 as unittest
 except(ImportError):
     import unittest
 from lib import common, adbtools
+
 from lib import myuiautomator
 
 DEVICE_NAME = sys.argv[2]
 
 
-class TestBrowser(unittest.TestCase):
+class TestVivo(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):
@@ -39,41 +34,51 @@ class TestBrowser(unittest.TestCase):
         self.device.send_keyevent(adbtools.KeyCode.KEYCODE_HOME)
         time.sleep(2)
 
-    def test_browser(self):
 
+    def test_alipay(self):
         img_count = 0
-        app_name = 'browser'
+        app_name = 'baidu'
 
         try:
             cmd = 'am force-stop {0} '.format(
-                'com.vivo.browser')
+                'com.baidu.searchbox')
+            self.device.shell(cmd)
+            time.sleep(1)
+            self.device.start_application('com.baidu.searchbox/.MainActivity')
+            time.sleep(5)
+            cmd = 'input tap {0} {1}'.format(
+                int(self.width / 5 - 20), (int(self.height / 20 * 19)))
+            self.device.shell(cmd)
+            time.sleep(1)
+            common.screenshots(app_name, img_count)
+            img_count += 1
+
+            time.sleep(1)
+            cmd = 'input tap {0} {1}'.format(
+                int(self.width / 5 * 4 + 20), (int(self.height / 20 * 19)))
+            self.device.shell(cmd)
+            time.sleep(2)
+            common.screenshots(app_name, img_count)
+            img_count += 1
+
+            time.sleep(2)
+            cmd = 'input tap {0} {1}'.format(
+                int(self.width / 5 - 20), (int(self.height / 20 * 19)))
+            self.device.shell(cmd)
+            time.sleep(1)
+            cmd = 'input tap {0} {1}'.format(
+                int(self.width / 2), (int(self.height / 2)))
             self.device.shell(cmd)
             time.sleep(5)
-            self.device.start_application('com.vivo.browser/.MainActivity')
+            common.screenshots(app_name, img_count)
+            img_count += 1
+            cmd = 'input tap {0} {1}'.format(
+                int(self.width / 10 * 7), (int(self.height / 20 * 19)))
+            self.device.shell(cmd)
             time.sleep(5)
             common.screenshots(app_name, img_count)
             img_count += 1
 
-            # check baidu web
-            myuiautomator.click_element_by_name(DEVICE_NAME, u'搜索或输入网址')
-            time.sleep(1)
-            self.device.shell('input text baidu.com')
-            time.sleep(1)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_ENTER)
-            time.sleep(10)
-            common.screenshots(app_name, img_count)
-            img_count += 1
-            time.sleep(2)
-            cmd = 'input tap {0} {1}'.format(
-                int(self.width / 2), (int(self.height / 5*4)))
-            self.device.shell(cmd)
-            time.sleep(5)
-            common.screenshots(app_name, img_count)
-            img_count += 1
-            self.assertEqual(1, 1)
         except Exception, ex:
             print ex
             self.assertEqual(1, 0, ex)
-
-
-

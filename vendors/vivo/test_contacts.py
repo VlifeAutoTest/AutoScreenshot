@@ -42,6 +42,10 @@ class TestContacts(unittest.TestCase):
         app_name = 'contacts'
 
         try:
+            cmd = 'am force-stop {0} '.format(
+                'com.android.contacts')
+            self.device.shell(cmd)
+            time.sleep(5)
             self.device.start_application('com.android.contacts/.DialtactsContactsEntryActivity')
             time.sleep(2)
             common.screenshots(app_name, img_count)

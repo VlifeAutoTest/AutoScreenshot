@@ -1,8 +1,6 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
-__author__ = 'Xuxh'
-
-
+__author__ = 'Administrator'
 import sys
 import time
 try:
@@ -11,10 +9,12 @@ except(ImportError):
     import unittest
 from lib import common, adbtools
 
+from lib import myuiautomator
+
 DEVICE_NAME = sys.argv[2]
 
 
-class TestNote(unittest.TestCase):
+class TestVivo(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):
@@ -36,28 +36,37 @@ class TestNote(unittest.TestCase):
         self.device.send_keyevent(adbtools.KeyCode.KEYCODE_HOME)
         time.sleep(2)
 
-    def test_note(self):
 
+    def test_camera(self):
         img_count = 0
-        app_name = 'note'
+        app_name = 'camera'
 
         try:
             cmd = 'am force-stop {0} '.format(
-                'com.android.notes')
+                'com.android.camera')
             self.device.shell(cmd)
-            time.sleep(2)
-            self.device.start_application('com.android.notes/.Notes')
+            time.sleep(5)
+            self.device.start_application('com.android.camera/.CameraActivity')
             time.sleep(2)
             common.screenshots(app_name, img_count)
             img_count += 1
-            # check note list
-            # self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
-            cmd = 'input tap {0} {1}'.format(int(self.width / 2), (int(self.height / 5)))
+            # 更多
+            time.sleep(2)
+            cmd = 'input tap {0} {1}'.format(
+                int(self.width / 25 * 23), int(self.height / 100 * 3))
             self.device.shell(cmd)
             time.sleep(2)
             common.screenshots(app_name, img_count)
-            self.assertEqual(1, 1)
+            time.sleep(2)
+            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
+            # 类型
+            time.sleep(2)
+            cmd = 'input tap {0} {1}'.format(
+                int(self.width / 25 * 23), int(self.height / 50 * 47))
+            self.device.shell(cmd)
+            time.sleep(2)
+            common.screenshots(app_name, img_count)
+
         except Exception, ex:
             print ex
             self.assertEqual(1, 0, ex)
-

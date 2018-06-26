@@ -45,12 +45,13 @@ class TestNotification(unittest.TestCase):
             cmd = 'input swipe {0} {1} {2} {3}'.format(
                 int(self.width/2), 0, int(self.width/2), (int(self.height/2)))
             self.device.shell(cmd)
+            time.sleep(2)
             common.screenshots(app_name, img_count)
+            img_count += 1
             self.assertEqual(1, 1)
         except Exception, ex:
             print ex
             self.assertEqual(1, 0, ex)
-
 
 
 
