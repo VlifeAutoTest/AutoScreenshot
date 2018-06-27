@@ -1,7 +1,7 @@
 __author__ = 'Administrator'
 
 import paramiko
-from fabric.api import env, put, get
+# from fabric.api import env, put, get
 
 
 class SSHAction(object):
@@ -48,19 +48,19 @@ class SSHAction(object):
         except Exception, ex:
             print ex
 
-    def upload(self, src, dst):
+    # def upload(self, src, dst):
+    #
+    #     env.user = self.user
+    #     env.password = self.password
+    #     env.host_strin = self.ip
+    #     put(src, dst)
 
-        env.user = self.user
-        env.password = self.password
-        env.host_strin = self.ip
-        put(src, dst)
-
-    def download(self, src, dst):
-
-        env.user = self.user
-        env.password = self.password
-        env.host_strin = self.ip
-        get(src, dst)
+    # def download(self, src, dst):
+    #
+    #     env.user = self.user
+    #     env.password = self.password
+    #     env.host_strin = self.ip
+    #     get(src, dst)
 
     def close(self):
 
