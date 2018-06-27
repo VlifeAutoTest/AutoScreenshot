@@ -5,6 +5,7 @@ __author__ = 'Xuxh'
 
 import sys
 import time
+from lib import querydb
 try:
     import unittest2 as unittest
 except(ImportError):
@@ -12,7 +13,7 @@ except(ImportError):
 from lib import common, adbtools
 from lib import myuiautomator
 
-DEVICE_NAME = sys.argv[2]
+DEVICE_NAME = querydb.get_uid(sys.argv[2])
 
 
 class TestBrowser(unittest.TestCase):
