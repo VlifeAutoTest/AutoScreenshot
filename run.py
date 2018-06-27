@@ -7,6 +7,7 @@ import argparse
 import os
 import pytest
 import time
+import sys
 
 
 from lib import adbtools
@@ -47,7 +48,9 @@ if __name__ == '__main__':
 
 
     # set config file for different mobile
-    cfg_file = os.path.join('config/', vendor + '.ini')
+    run_path = os.path.dirname(os.path.abspath(sys.argv[0]))
+    tmp = os.path.join(run_path, 'config').replace("\\", "/")
+    cfg_file = tmp + "/" + vendor + '.ini'
     cfg = configuration.configuration()
     cfg.fileConfig(cfg_file)
     if uid not in cfg.getSections():
@@ -59,9 +62,9 @@ if __name__ == '__main__':
     status = ''
 
     try:
-
+        tmp = os.path.join(run_path, 'vendors/').replace("\\","/")
         # start testing
-        test_file_dir = os.path.abspath(os.path.join('vendors/', vendor))
+        test_file_dir = os.path.join(tmp, vendor)
         remote_img_path = ''
         theme_list, test_files_list = get_test_info(rid)
         for theme in theme_list:
