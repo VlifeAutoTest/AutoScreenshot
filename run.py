@@ -8,7 +8,8 @@ import os
 import pytest
 import time
 import sys
-import datetime
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 
 from lib import adbtools
