@@ -19,6 +19,7 @@ class AdbTools(object):
         self.__check_adb()
         self.__connection_devices()
 
+
     def __get_find(self):
         """
         判断系统类型，windows使用findstr，linux使用grep
@@ -35,6 +36,7 @@ class AdbTools(object):
         判断是否设置环境变量ANDROID_HOME
         :return:
         """
+        # self.__command = os.path.join("/home/lang/android-sdk-linux", "platform-tools", "adb")
         if "ANDROID_HOME" in os.environ:
             if self.__system == "Windows":
                 path = os.path.join(os.environ["ANDROID_HOME"], "platform-tools", "adb.exe")

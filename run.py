@@ -8,12 +8,15 @@ import os
 import pytest
 import time
 import sys
+import datetime
 
 
 from lib import adbtools
 from lib import configuration
 from lib import common
 from lib import querydb
+from lib import ssh
+from lib import myglobal
 
 
 def get_test_info(rid):
@@ -43,12 +46,18 @@ if __name__ == '__main__':
 
     # create remote path
     basic_img_path = querydb.get_run_info(rid, 'image_path')
-    newpath = '/diskb' + basic_img_path
-    common.create_remote_path(newpath)
+    remote_filepath = '/diskb' + basic_img_path
+    common.create_remote_path(remote_filepath)
+
+    # create logger file and remote log name
+    run_path = os.path.dirname(os.path.abspath(sys.argv[0]))
+    log_name = querydb.get_run_info(rid, 'log_file')
+    remote_log_name = os.path.join(remote_filepath, log_name).replace("\\", "/")
+    local_log_name = os.path.join(run_path, "log", log_name).replace("\\", "/")
+    logger = common.create_logger(local_log_name)
 
 
     # set config file for different mobile
-    run_path = os.path.dirname(os.path.abspath(sys.argv[0]))
     tmp = os.path.join(run_path, 'config').replace("\\", "/")
     cfg_file = tmp + "/" + vendor + '.ini'
     cfg = configuration.configuration()
@@ -56,21 +65,21 @@ if __name__ == '__main__':
     if uid not in cfg.getSections():
         cfg.setValue(uid, 'remote_image_path', '')
 
-    device = adbtools.AdbTools(uid)
-
     message = ''
     status = ''
 
     try:
-        tmp = os.path.join(run_path, 'vendors/').replace("\\","/")
+        tmp = os.path.join(run_path, 'vendors/').replace("\\", "/")
         # start testing
         test_file_dir = os.path.join(tmp, vendor)
+        logger.debug("test_file_dir" + test_file_dir)
         remote_img_path = ''
         theme_list, test_files_list = get_test_info(rid)
         for theme in theme_list:
 
             # 设置theme
-            flag = common.set_theme(theme, uid)
+            logger.debug("set theme")
+            flag = common.set_theme(theme, uid, logger)
             if flag:
                 # create image file and set value in cfg file
                 remote_img_path = common.get_remote_path(basic_img_path, theme)
@@ -88,6 +97,7 @@ if __name__ == '__main__':
                     pytest.main(test_file_dir)
             else:
                 print 'theme name {0} is not found!!!!!!!!'.format(theme.encode('gbk'))
+                device = adbtools.AdbTools(uid)
                 device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
                 time.sleep(2)
                 device.send_keyevent(adbtools.KeyCode.KEYCODE_HOME)
@@ -101,6 +111,15 @@ if __name__ == '__main__':
     except Exception, ex:
         message = ex
         status = 'Failed'
+
+    # copy log file to server
+    ip = myglobal.common_config.getValue('IMAGEHOST', 'ip')
+    username = myglobal.common_config.getValue('IMAGEHOST', 'username')
+    passwd = myglobal.common_config.getValue('IMAGEHOST', 'passwd')
+    remote_host = ssh.SSHAction(ip, username, passwd)
+
+    remote_host.upload_file(local_log_name, remote_log_name)
+    remote_host.close()
 
     # update run info
     querydb.update_run_status(rid, message, status)

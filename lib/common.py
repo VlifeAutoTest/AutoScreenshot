@@ -13,6 +13,7 @@ import configuration
 import ssh
 import querydb
 import myuiautomator
+import logging
 
 
 def click_apply_button(dname, text, x_point):
@@ -28,11 +29,31 @@ def click_apply_button(dname, text, x_point):
     return False
 
 
-def set_theme(theme_name, uid):
+def create_logger(filename):
+
+    # create multi layer directory
+    dirname = os.path.dirname(filename)
+    if not os.path.isdir(dirname):
+        os.makedirs(dirname)
+    logger = logging.getLogger("VlifeTest")
+    formatter = logging.Formatter('%(name)-12s %(asctime)s %(levelname)-8s %(message)s', '%a, %d %b %Y %H:%M:%S',)
+    file_handler = logging.FileHandler(filename)
+    file_handler.setFormatter(formatter)
+    stream_handler = logging.StreamHandler(sys.stderr)
+    logger.addHandler(file_handler)
+    logger.addHandler(stream_handler)
+    logger.setLevel(logging.DEBUG)
+
+    return logger
+
+
+def set_theme(theme_name, uid, logger):
 
     start_activity = common_config.getValue('APPLICATION','start')
+    logger.debug("start_activity:" + start_activity)
     device = adbtools.AdbTools(uid)
     width, height = device.get_screen_normal_size()
+    logger.debug(width)
     device.start_application(start_activity)
 
     time.sleep(1)
