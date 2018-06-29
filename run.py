@@ -23,7 +23,7 @@ from lib import myglobal
 def get_test_info(rid):
 
     resource_list = querydb.get_run_info(rid, "resource").split(",")
-    themes = map(lambda x: querydb.get_theme_name(x), resource_list)
+    themes = map(lambda x: querydb.get_theme_info(x, "themename"), resource_list)
     app_list = querydb.get_run_info(rid, "app").split(",")
     files = map(lambda x: querydb.get_app_name(x), app_list)
 
@@ -49,6 +49,9 @@ if __name__ == '__main__':
     basic_img_path = querydb.get_run_info(rid, 'image_path')
     remote_filepath = '/diskb' + basic_img_path
     common.create_remote_path(remote_filepath)
+
+    # initi mobile env
+    common.init_device_env(rid)
 
     # create logger file and remote log name
     run_path = os.path.dirname(os.path.abspath(sys.argv[0]))

@@ -48,6 +48,13 @@ class SSHAction(object):
         except Exception, ex:
             print ex
 
+    def download_file(self, orig_file, dest_file):
+
+        try:
+            self.sftp.get(orig_file, dest_file)
+        except Exception, ex:
+            print ex
+
     # def upload(self, src, dst):
     #
     #     env.user = self.user

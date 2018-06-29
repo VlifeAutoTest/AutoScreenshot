@@ -8,15 +8,87 @@ import sys
 import time
 
 import adbtools
-from myglobal import common_config, PATH
+from myglobal import common_config, vivo_config
 import configuration
 import ssh
 import querydb
 import myuiautomator
 import logging
+import threading
+
+
+def get_vendor_config(vname):
+
+    pkg = ''
+    spath = ''
+
+    if vname == 'vivo':
+        pkg = vivo_config.getValue('COMMON', 'app_package')
+        spath = vivo_config.getValue('COMMON', 'mobile_resource_path')
+
+    return pkg, spath
+
+
+def install_app(uid, local_path):
+
+    device = adbtools.AdbTools(uid)
+
+    find_text = [u"好", u"安装", u"允许"]
+
+    try:
+        threads = []
+        install_app = threading.Thread(target=device.install, args=(local_path,))
+        proc_process = threading.Thread(target=myuiautomator.do_popup_windows, args=(15, find_text, uid))
+        threads.append(proc_process)
+        threads.append(install_app)
+        for t in threads:
+            t.setDaemon(True)
+            t.start()
+            time.sleep(2)
+        t.join()
+    except Exception, ex:
+        print ex
+        pass
+
+
+def init_device_env(rid):
+
+    uid = querydb.get_uid(rid)
+    vendor = querydb.get_vendor_name(rid).lower().strip()
+    device = adbtools.AdbTools(uid)
+    run_path = os.path.dirname(os.path.abspath(sys.argv[0]))
+
+    # install theme tool
+    app_path = os.path.join(run_path, "app", "ThemeHelper.apk").replace("\\", "/")
+    pkg, mobile_path = get_vendor_config(vendor)
+    # device.uninstall(pkg)
+    # install_app(uid, app_path)
+
+    # pull resource files from server to local
+    ip = common_config.getValue('IMAGEHOST', 'ip')
+    username = common_config.getValue('IMAGEHOST', 'username')
+    passwd = common_config.getValue('IMAGEHOST', 'passwd')
+    host = ssh.SSHAction(ip, username, passwd)
+
+    # get local path
+    resource_list = querydb.get_run_info(rid, "resource").split(",")
+    remote_files = map(lambda x: querydb.get_theme_info(x, "path"), resource_list)
+    local_path = os.path.join(run_path, "resources").replace("\\", "/")
+    if not os.path.isdir(local_path):
+        os.makedirs(local_path)
+
+    # start pull file from server, then push to device
+    for rf in remote_files:
+        name = os.path.basename(rf)
+        local_full_path = os.path.join(local_path, name).replace("\\", "/")
+        host.download_file(rf, local_full_path)
+        device.push(local_full_path, mobile_path)
+
+    host.close()
 
 
 def click_apply_button(dname, text, x_point):
+
 
     element = myuiautomator.Element(dname)
     event = myuiautomator.Event(dname)
@@ -49,7 +121,7 @@ def create_logger(filename):
 
 def set_theme(theme_name, uid, logger):
 
-    start_activity = common_config.getValue('APPLICATION','start')
+    start_activity = common_config.getValue('APPLICATION', 'start')
     logger.debug("start_activity:" + start_activity)
     device = adbtools.AdbTools(uid)
     width, height = device.get_screen_normal_size()
@@ -112,7 +184,6 @@ def get_remote_path(base_dir, theme):
         return ""
     else:
         return parent_path
-    return parent_path
 
 
 def create_remote_path(newpath):
@@ -159,7 +230,7 @@ def delete_file(my_file):
     if os.path.exists(my_file):
         os.remove(my_file)
     else:
-        print 'no such file:%s'%my_file
+        print 'no such file:%s' % my_file
 
 
 def get_image_path(remote_path, prefix, count):
@@ -177,7 +248,6 @@ def get_image_path(remote_path, prefix, count):
 def get_log_path(vendor, dname):
 
     cur_date = datetime.datetime.now().strftime("%Y%m%d")
-    now = datetime.datetime.now().strftime("%H%M")
     parent_path = os.path.join('log', cur_date, vendor, dname)
 
     # create multi layer directory
@@ -191,7 +261,7 @@ def screenshots(app_name, img_count):
 
         local_image_path = os.path.dirname(os.path.abspath(sys.argv[0]))
 
-        #get remote path
+        # get remote path
         vendor = querydb.get_vendor_name(sys.argv[2]).lower().strip()
         cfg_file = vendor + '.ini'
         cfg = configuration.configuration()
@@ -219,7 +289,5 @@ def screenshots(app_name, img_count):
 
 
 if __name__ == '__main__':
-
-    zip_files('/diskb/picture/vivo/db6964a4/201805221455/Aa云想衣裳花想容', 'db6964a4', 'vivo')
 
     pass
