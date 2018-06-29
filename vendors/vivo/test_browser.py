@@ -14,7 +14,7 @@ except(ImportError):
 from lib import common, adbtools
 from lib import myuiautomator
 
-DEVICE_NAME = sys.argv[2]
+DEVICE_NAME = querydb.get_uid(sys.argv[2])
 
 
 class TestBrowser(unittest.TestCase):

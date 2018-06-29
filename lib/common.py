@@ -13,6 +13,7 @@ import configuration
 import ssh
 import querydb
 import myuiautomator
+import logging
 
 
 def click_apply_button(dname, text, x_point):
@@ -28,11 +29,31 @@ def click_apply_button(dname, text, x_point):
     return False
 
 
-def set_theme(theme_name, uid):
+def create_logger(filename):
+
+    # create multi layer directory
+    dirname = os.path.dirname(filename)
+    if not os.path.isdir(dirname):
+        os.makedirs(dirname)
+    logger = logging.getLogger("VlifeTest")
+    formatter = logging.Formatter('%(name)-12s %(asctime)s %(levelname)-8s %(message)s', '%a, %d %b %Y %H:%M:%S',)
+    file_handler = logging.FileHandler(filename)
+    file_handler.setFormatter(formatter)
+    stream_handler = logging.StreamHandler(sys.stderr)
+    logger.addHandler(file_handler)
+    logger.addHandler(stream_handler)
+    logger.setLevel(logging.DEBUG)
+
+    return logger
+
+
+def set_theme(theme_name, uid, logger):
 
     start_activity = common_config.getValue('APPLICATION','start')
+    logger.debug("start_activity:" + start_activity)
     device = adbtools.AdbTools(uid)
     width, height = device.get_screen_normal_size()
+    logger.debug(width)
     device.start_application(start_activity)
 
     time.sleep(1)
@@ -85,19 +106,32 @@ def get_remote_path(base_dir, theme):
 
     parent_path = os.path.join('/diskb' + base_dir, theme).replace("\\", '/')
 
+    info = create_remote_path(parent_path)
+
+    if info != "":
+        return ""
+    else:
+        return parent_path
+    return parent_path
+
+
+def create_remote_path(newpath):
+
+    error = ""
+
     ip = common_config.getValue('IMAGEHOST', 'ip')
     username = common_config.getValue('IMAGEHOST', 'username')
     passwd = common_config.getValue('IMAGEHOST', 'passwd')
     host = ssh.SSHAction(ip, username, passwd)
 
     try:
-        host.mkdirs(parent_path)
+        host.mkdirs(newpath)
     except Exception, ex:
-        parent_path = ''
-        print ex
+
+        error = ex
 
     host.close()
-    return parent_path
+    return error
 
 
 def unlock_screen(dname):
@@ -116,7 +150,7 @@ def unlock_screen(dname):
     device.send_keyevent(26)
 
     # unlock screen
-    cmd = 'input swipe {0} {1} {2} {3}'.format(int(width/2), (int(height/7*6)), int(width/6*5), (int(height/7*6)))
+    cmd = 'input swipe {0} {1} {2} {3}'.format(int(width/6), (int(height/7*6)), int(width/6*5), (int(height/7*6)), 500)
     device.shell(cmd)
 
 
@@ -158,11 +192,11 @@ def screenshots(app_name, img_count):
         local_image_path = os.path.dirname(os.path.abspath(sys.argv[0]))
 
         #get remote path
-        vendor = sys.argv[4].lower()
+        vendor = querydb.get_vendor_name(sys.argv[2]).lower().strip()
         cfg_file = vendor + '.ini'
         cfg = configuration.configuration()
         cfg.fileConfig(os.path.join(local_image_path, 'config', cfg_file))
-        uid = sys.argv[2]
+        uid = querydb.get_uid(sys.argv[2])
         remote_image_path = cfg.getValue(uid, 'remote_image_path')
 
         fname = app_name + str(img_count)+'.png'
@@ -182,8 +216,6 @@ def screenshots(app_name, img_count):
         remote_host.close()
         # delete local file
         delete_file(local_file)
-
-        querydb.insert_image_to_db(app_name, uid, vendor, remote_file)
 
 
 if __name__ == '__main__':
