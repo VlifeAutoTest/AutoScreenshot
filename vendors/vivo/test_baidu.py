@@ -8,10 +8,10 @@ try:
 except(ImportError):
     import unittest
 from lib import common, adbtools
-
 from lib import myuiautomator
+from lib import querydb
 
-DEVICE_NAME = sys.argv[2]
+DEVICE_NAME = querydb.get_uid(sys.argv[2])
 
 
 class TestVivo(unittest.TestCase):
@@ -38,7 +38,6 @@ class TestVivo(unittest.TestCase):
 
 
     def test_baidu(self):
-        img_count = 0
         app_name = 'baidu'
 
         try:
@@ -58,30 +57,26 @@ class TestVivo(unittest.TestCase):
             time.sleep(2)
             myuiautomator.click_popup_window(DEVICE_NAME, [u'百度'])
             time.sleep(5)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '百度-首页')
             time.sleep(1)
             cmd = 'input tap {0} {1}'.format(
                 int(self.width / 2), (int(self.height / 2)))
             self.device.shell(cmd)
             time.sleep(5)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '新闻')
 
             time.sleep(1)
             cmd = 'input tap {0} {1}'.format(
                 int(self.width / 100 * 67), (int(self.height / 100 * 99)))
             self.device.shell(cmd)
             time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '评论')
             time.sleep(2)
             self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
             time.sleep(2)
             myuiautomator.click_popup_window(DEVICE_NAME, [u'未登录'])
             time.sleep(5)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '未登录')
 
         except Exception, ex:
             print ex

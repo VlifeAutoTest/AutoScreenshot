@@ -11,7 +11,9 @@ from lib import common, adbtools
 
 from lib import myuiautomator
 #
-DEVICE_NAME = sys.argv[2]
+from lib import querydb
+
+DEVICE_NAME = querydb.get_uid(sys.argv[2])
 #
 #
 class TestQq(unittest.TestCase):
@@ -38,7 +40,6 @@ class TestQq(unittest.TestCase):
 
 
     def test_qq(self):
-        img_count = 0
         app_name = 'qq'
 
         try:
@@ -50,57 +51,35 @@ class TestQq(unittest.TestCase):
             time.sleep(2)
             self.device.start_application('com.tencent.mobileqq/.activity.SplashActivity')
             time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '首页')
             time.sleep(2)
-            # 微视
-            time.sleep(3)
-            cmd = 'input tap {0} {1}'.format(
-                int(self.width / 2), (int(self.height / 50 * 13)))
-            self.device.shell(cmd)
-            time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
-            time.sleep(2)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
             # 腾讯新闻
             time.sleep(3)
-            cmd = 'input tap {0} {1}'.format(
-                int(self.width / 2), (int(self.height / 50 * 17)))
-            self.device.shell(cmd)
-            time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
-            time.sleep(2)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
-            # 服务号
-            time.sleep(3)
-            cmd = 'input tap {0} {1}'.format(
-                int(self.width / 2), (int(self.height / 20 * 9)))
-            self.device.shell(cmd)
-            time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
-            time.sleep(2)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
+            if myuiautomator.in_or_not(DEVICE_NAME, u'服务号') == True:
+                myuiautomator.click_popup_window(DEVICE_NAME, [u'服务号'])
+                time.sleep(3)
+                if myuiautomator.in_or_not(DEVICE_NAME, u'腾讯新闻') == True:
+                    myuiautomator.click_popup_window(DEVICE_NAME, [u'腾讯新闻'])
+                    time.sleep(2)
+                    common.screenshots(app_name, '腾讯新闻')
+                    time.sleep(2)
+                    self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
+                else:
+                    pass
+                time.sleep(2)
+                self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
+            else:
+                pass
             # 联系人
             time.sleep(2)
             myuiautomator.click_popup_window(DEVICE_NAME, [u'联系人'])
             time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
-            # 看点
-            time.sleep(2)
-            myuiautomator.click_popup_window(DEVICE_NAME, [u'看点'])
-            time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '联系人')
             # 动态
             time.sleep(2)
             myuiautomator.click_popup_window(DEVICE_NAME, [u'动态'])
             time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '动态')
             cmd = 'am force-stop {0} '.format(
                 'com.tencent.mobileqq')
             self.device.shell(cmd)

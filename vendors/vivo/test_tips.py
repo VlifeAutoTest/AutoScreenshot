@@ -11,7 +11,9 @@ from lib import common, adbtools
 
 from lib import myuiautomator
 
-DEVICE_NAME = sys.argv[2]
+from lib import querydb
+
+DEVICE_NAME = querydb.get_uid(sys.argv[2])
 
 
 class TestVivo(unittest.TestCase):
@@ -57,8 +59,10 @@ class TestVivo(unittest.TestCase):
             common.screenshots(app_name, img_count)
             img_count += 1
             # 空间管理
-            time.sleep(2)
-            myuiautomator.click_popup_window(DEVICE_NAME, [u'空间管理'])
+            time.sleep(10)
+            cmd = 'input tap {0} {1}'.format(
+                int(self.width / 2), (int(self.height / 2)))
+            self.device.shell(cmd)
             time.sleep(2)
             common.screenshots(app_name, img_count)
             img_count += 1

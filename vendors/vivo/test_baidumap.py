@@ -1,3 +1,5 @@
+#! /usr/bin/python
+# -*- coding: utf-8 -*-
 __author__ = 'Administrator'
 import sys
 import time
@@ -9,7 +11,9 @@ from lib import common, adbtools
 
 from lib import myuiautomator
 
-DEVICE_NAME = sys.argv[2]
+from lib import querydb
+
+DEVICE_NAME = querydb.get_uid(sys.argv[2])
 
 
 class TestVivo(unittest.TestCase):
@@ -36,7 +40,6 @@ class TestVivo(unittest.TestCase):
 
 
     def test_baidumap(self):
-        img_count = 0
         app_name = 'baidumap'
 
         try:
@@ -47,16 +50,14 @@ class TestVivo(unittest.TestCase):
             self.device.shell(cmd)
             self.device.start_application('com.baidu.BaiduMap/com.baidu.baidumaps.MapsActivity')
             time.sleep(5)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '首页')
 
             time.sleep(2)
             cmd = 'input tap {0} {1}'.format(
                 int(self.width / 2), (int(self.height / 10)))
             self.device.shell(cmd)
             time.sleep(1)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '搜索')
 
         except Exception, ex:
             print ex

@@ -11,7 +11,9 @@ from lib import common, adbtools
 
 from lib import myuiautomator
 
-DEVICE_NAME = sys.argv[2]
+from lib import querydb
+
+DEVICE_NAME = querydb.get_uid(sys.argv[2])
 
 
 class TestVivo(unittest.TestCase):
@@ -38,7 +40,6 @@ class TestVivo(unittest.TestCase):
 
 
     def test_camera(self):
-        img_count = 0
         app_name = 'camera'
 
         try:
@@ -50,15 +51,14 @@ class TestVivo(unittest.TestCase):
             time.sleep(5)
             self.device.start_application('com.android.camera/.CameraActivity')
             time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '相机')
             # 更多
             time.sleep(2)
             cmd = 'input tap {0} {1}'.format(
                 int(self.width / 25 * 23), int(self.height / 100 * 3))
             self.device.shell(cmd)
             time.sleep(2)
-            common.screenshots(app_name, img_count)
+            common.screenshots(app_name, '更多')
             time.sleep(2)
             self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
             # 类型
@@ -67,7 +67,7 @@ class TestVivo(unittest.TestCase):
                 int(self.width / 25 * 23), int(self.height / 50 * 47))
             self.device.shell(cmd)
             time.sleep(2)
-            common.screenshots(app_name, img_count)
+            common.screenshots(app_name, '类型')
 
         except Exception, ex:
             print ex

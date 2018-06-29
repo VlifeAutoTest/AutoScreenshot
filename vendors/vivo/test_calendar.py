@@ -14,7 +14,9 @@ except(ImportError):
 from lib import common, adbtools
 from lib import myuiautomator
 
-DEVICE_NAME = sys.argv[2]
+from lib import querydb
+
+DEVICE_NAME = querydb.get_uid(sys.argv[2])
 
 
 class TestBrowser(unittest.TestCase):
@@ -53,7 +55,7 @@ class TestBrowser(unittest.TestCase):
             time.sleep(5)
             self.device.start_application('com.bbk.calendar/.MainActivity')
             time.sleep(2)
-            common.screenshots(app_name, img_count)
+            common.screenshots(app_name, '日历')
             img_count += 1
 
             self.assertEqual(1, 1)

@@ -9,7 +9,9 @@ from lib import common, adbtools
 
 from lib import myuiautomator
 
-DEVICE_NAME = sys.argv[2]
+from lib import querydb
+
+DEVICE_NAME = querydb.get_uid(sys.argv[2])
 
 
 class TestVivo(unittest.TestCase):
@@ -94,9 +96,7 @@ class TestVivo(unittest.TestCase):
             common.screenshots(app_name, img_count)
             img_count += 1
             time.sleep(1)
-            cmd = 'am force-stop {0} '.format(
-                'com.android.bbkmusic')
-            self.device.shell(cmd)
+
         except Exception, ex:
             print ex
             self.assertEqual(1, 0, ex)

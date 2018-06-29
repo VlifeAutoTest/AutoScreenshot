@@ -11,7 +11,9 @@ from lib import common, adbtools
 
 from lib import myuiautomator
 
-DEVICE_NAME = sys.argv[2]
+from lib import querydb
+
+DEVICE_NAME = querydb.get_uid(sys.argv[2])
 
 
 class TestVivo(unittest.TestCase):
@@ -38,7 +40,6 @@ class TestVivo(unittest.TestCase):
 
 
     def test_weather(self):
-        img_count = 0
         app_name = 'weather'
 
         try:
@@ -50,8 +51,7 @@ class TestVivo(unittest.TestCase):
             time.sleep(1)
             self.device.start_application('com.vivo.weather/.WeatherMain')
             time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '首页')
 
             # 首页-设置
             time.sleep(10)
@@ -59,16 +59,14 @@ class TestVivo(unittest.TestCase):
                 int(self.width / 20 * 19), (int(self.height / 100 * 7)))
             self.device.shell(cmd)
             time.sleep(1)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '首页-设置')
             # 添加城市
             time.sleep(2)
             cmd = 'input tap {0} {1}'.format(
                 int(self.width / 20 * 19), (int(self.height / 100 * 7)))
             self.device.shell(cmd)
             time.sleep(1)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '添加城市')
             time.sleep(2)
             self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
             time.sleep(2)

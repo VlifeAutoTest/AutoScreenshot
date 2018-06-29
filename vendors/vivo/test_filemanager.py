@@ -14,7 +14,9 @@ except(ImportError):
 from lib import common, adbtools
 from lib import myuiautomator
 
-DEVICE_NAME = sys.argv[2]
+from lib import querydb
+
+DEVICE_NAME = querydb.get_uid(sys.argv[2])
 
 
 class TestBrowser(unittest.TestCase):
@@ -41,7 +43,6 @@ class TestBrowser(unittest.TestCase):
 
     def test_filemanager(self):
 
-        img_count = 0
         app_name = 'filemanager'
 
         try:
@@ -52,37 +53,39 @@ class TestBrowser(unittest.TestCase):
             self.device.shell(cmd)
             time.sleep(5)
             self.device.start_application('com.android.filemanager/.FileManagerActivity')
-            time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
 
             time.sleep(2)
-            cmd = 'input tap {0} {1}'.format(
-                int(self.width / 4), (int(self.height / 4)))
-            self.device.shell(cmd)
-            time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            if myuiautomator.in_or_not(DEVICE_NAME, u'分类浏览') == True:
+                myuiautomator.click_popup_window(DEVICE_NAME, [u'分类浏览'])
+                time.sleep(1)
+                common.screenshots(app_name, '分类浏览')
+            else:
+                pass
 
             time.sleep(2)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
-            time.sleep(2)
-            cmd = 'input tap {0} {1}'.format(
-                int(self.width / 4), (int(self.height / 5 * 2)))
-            self.device.shell(cmd)
-            time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            if myuiautomator.in_or_not(DEVICE_NAME, u'音乐') == True:
+                myuiautomator.click_popup_window(DEVICE_NAME, [u'音乐'])
+                time.sleep(1)
+                common.screenshots(app_name, '音乐')
+                time.sleep(2)
+                self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
+            else:
+                pass
 
             time.sleep(2)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
+            if myuiautomator.in_or_not(DEVICE_NAME, u'文档') == True:
+                myuiautomator.click_popup_window(DEVICE_NAME, [u'文档'])
+                time.sleep(1)
+                common.screenshots(app_name, '文档')
+                time.sleep(2)
+                self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
+            else:
+                pass
             time.sleep(2)
-            cmd = 'input tap {0} {1}'.format(
-                int(self.width / 2), (int(self.height / 5 * 4)))
-            self.device.shell(cmd)
-            time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            if myuiautomator.in_or_not(DEVICE_NAME, u'手机存储') == True:
+                myuiautomator.click_popup_window(DEVICE_NAME, [u'手机存储'])
+                time.sleep(1)
+                common.screenshots(app_name, '手机存储')
 
             self.assertEqual(1, 1)
         except Exception, ex:

@@ -1,3 +1,5 @@
+#! /usr/bin/python
+# -*- coding: utf-8 -*-
 __author__ = 'Administrator'
 import sys
 import time
@@ -9,7 +11,9 @@ from lib import common, adbtools
 
 from lib import myuiautomator
 
-DEVICE_NAME = sys.argv[2]
+from lib import querydb
+
+DEVICE_NAME = querydb.get_uid(sys.argv[2])
 
 
 class TestVivo(unittest.TestCase):
@@ -36,7 +40,6 @@ class TestVivo(unittest.TestCase):
 
 
     def test_qiyi(self):
-        img_count = 0
         app_name = 'qiyi'
 
         try:
@@ -48,8 +51,7 @@ class TestVivo(unittest.TestCase):
             time.sleep(2)
             self.device.start_application('com.qiyi.video/org.qiyi.android.video.MainActivity')
             time.sleep(10)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '首页')
 
             time.sleep(2)
             cmd = 'input tap {0} {1}'.format(
@@ -60,16 +62,14 @@ class TestVivo(unittest.TestCase):
                 int(self.width / 2), (int(self.height / 3 * 2)))
             self.device.shell(cmd)
             time.sleep(20)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '弹幕')
 
             time.sleep(2)
             cmd = 'input tap {0} {1}'.format(
                 int(self.width / 10 * 7), (int(self.height / 5 * 3 - 100)))
             self.device.shell(cmd)
             time.sleep(5)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '评论')
         except Exception, ex:
             print ex
             self.assertEqual(1, 0, ex)

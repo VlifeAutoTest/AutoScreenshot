@@ -39,7 +39,6 @@ class TestContacts(unittest.TestCase):
 
     def test_contacts(self):
 
-        img_count = 0
         app_name = 'contacts'
 
         try:
@@ -51,7 +50,7 @@ class TestContacts(unittest.TestCase):
             time.sleep(5)
             self.device.start_application('com.android.contacts/.DialtactsContactsEntryActivity')
             time.sleep(2)
-            common.screenshots(app_name, img_count)
+            common.screenshots(app_name, '联系人')
             self.assertEqual(1, 1)
         except Exception, ex:
             print ex

@@ -14,7 +14,9 @@ except(ImportError):
 from lib import common, adbtools
 from lib import myuiautomator
 
-DEVICE_NAME = sys.argv[2]
+from lib import querydb
+
+DEVICE_NAME = querydb.get_uid(sys.argv[2])
 
 
 class TestBrowser(unittest.TestCase):
@@ -41,7 +43,6 @@ class TestBrowser(unittest.TestCase):
 
     def test_clock(self):
 
-        img_count = 0
         app_name = 'clock'
 
         try:
@@ -56,29 +57,25 @@ class TestBrowser(unittest.TestCase):
                 int(self.width / 4  - 30 ), (int(self.height / 20 * 19)))
             self.device.shell(cmd)
             time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '闹钟')
             time.sleep(2)
             cmd = 'input tap {0} {1}'.format(
                 int(self.width / 2 - 30), (int(self.height / 20 * 19)))
             self.device.shell(cmd)
             time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '世界时钟')
             time.sleep(2)
             cmd = 'input tap {0} {1}'.format(
                 int(self.width / 2 + 30), (int(self.height / 20 * 19)))
             self.device.shell(cmd)
             time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '秒表')
             time.sleep(2)
             cmd = 'input tap {0} {1}'.format(
                 int(self.width / 4 * 3 + 30), (int(self.height / 20 * 19)))
             self.device.shell(cmd)
             time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '计时器')
             self.assertEqual(1, 1)
         except Exception, ex:
             print ex

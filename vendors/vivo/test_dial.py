@@ -41,7 +41,6 @@ class TestDial(unittest.TestCase):
 
     def test_dial(self):
 
-        img_count = 0
         app_name = 'dial'
 
         try:
@@ -53,8 +52,7 @@ class TestDial(unittest.TestCase):
             time.sleep(5)
             self.device.start_application('com.android.dialer/.BBKTwelveKeyDialer')
             time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '拨号')
 
             # swipe screen for all dial
             cmd = 'input swipe {0} {1} {2} {3}'.format(
@@ -63,7 +61,7 @@ class TestDial(unittest.TestCase):
             time.sleep(2)
             myuiautomator.click_popup_window(DEVICE_NAME, [u'未接'])
             time.sleep(2)
-            common.screenshots(app_name, img_count)
+            common.screenshots(app_name, '未接')
             self.assertEqual(1, 1)
         except Exception, ex:
             print ex

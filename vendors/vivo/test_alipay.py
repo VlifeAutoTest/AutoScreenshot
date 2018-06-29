@@ -1,3 +1,5 @@
+#! /usr/bin/python
+# -*- coding: utf-8 -*-
 __author__ = 'Administrator'
 import sys
 import time
@@ -8,8 +10,9 @@ except(ImportError):
 from lib import common, adbtools
 
 from lib import myuiautomator
+from lib import querydb
 
-DEVICE_NAME = sys.argv[2]
+DEVICE_NAME = querydb.get_uid(sys.argv[2])
 
 
 class TestVivo(unittest.TestCase):
@@ -36,7 +39,6 @@ class TestVivo(unittest.TestCase):
 
 
     def test_alipay(self):
-        img_count = 0
         app_name = 'alipay'
 
         try:
@@ -52,48 +54,42 @@ class TestVivo(unittest.TestCase):
                 int(self.width / 5 - 20), (int(self.height / 19 * 18)))
             self.device.shell(cmd)
             time.sleep(1)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '首页')
 
             time.sleep(1)
             cmd = 'input tap {0} {1}'.format(
                 int(self.width / 5 + 20), (int(self.height / 19 * 18)))
             self.device.shell(cmd)
             time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '财富')
 
             time.sleep(2)
             cmd = 'input tap {0} {1}'.format(
                 int(self.width / 5 * 2 + 20), (int(self.height / 19 * 18)))
             self.device.shell(cmd)
             time.sleep(3)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '口碑')
 
             time.sleep(2)
             cmd = 'input tap {0} {1}'.format(
                 int(self.width / 5 * 3 + 20), (int(self.height / 19 * 18)))
             self.device.shell(cmd)
             time.sleep(1)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '朋友')
 
             time.sleep(1)
             cmd = 'input tap {0} {1}'.format(
                 int(self.width / 5 * 4 + 50), (int(self.height / 19 * 18)))
             self.device.shell(cmd)
             time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '我的')
 
             time.sleep(1)
             cmd = 'input tap {0} {1}'.format(
                 int(self.width / 2), (int(self.height / 10 * 7)))
             self.device.shell(cmd)
             time.sleep(5)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '我的-余额')
             self.assertEqual(1, 1)
 
         except Exception, ex:

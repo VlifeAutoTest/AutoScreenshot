@@ -13,6 +13,7 @@ except(ImportError):
     import unittest
 from lib import common, adbtools
 from lib import myuiautomator
+from lib import querydb
 
 DEVICE_NAME = querydb.get_uid(sys.argv[2])
 
@@ -45,16 +46,9 @@ class TestBrowser(unittest.TestCase):
         app_name = 'browser'
 
         try:
-            self.device.start_application('com.vivo.browser/.BrowserActivity')
-            time.sleep(5)
-            cmd = 'am force-stop {0} '.format(
-                'com.vivo.browser')
-            self.device.shell(cmd)
-            time.sleep(5)
-            self.device.start_application('com.vivo.browser/.BrowserActivity')
-            time.sleep(5)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            self.device.start_application('com.vivo.browser/.MainActivity')
+            time.sleep(2)
+            common.screenshots(app_name, '首页')
 
             # check baidu web
             myuiautomator.click_element_by_name(DEVICE_NAME, u'搜索或输入网址')
@@ -62,16 +56,8 @@ class TestBrowser(unittest.TestCase):
             self.device.shell('input text baidu.com')
             time.sleep(1)
             self.device.send_keyevent(adbtools.KeyCode.KEYCODE_ENTER)
-            time.sleep(10)
-            common.screenshots(app_name, img_count)
-            img_count += 1
-            time.sleep(2)
-            cmd = 'input tap {0} {1}'.format(
-                int(self.width / 2), (int(self.height / 5*4)))
-            self.device.shell(cmd)
-            time.sleep(5)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            time.sleep(1)
+            common.screenshots(app_name, '百度')
             self.assertEqual(1, 1)
         except Exception, ex:
             print ex

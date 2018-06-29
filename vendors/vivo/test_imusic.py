@@ -8,10 +8,10 @@ try:
 except(ImportError):
     import unittest
 from lib import common, adbtools
-
 from lib import myuiautomator
+from lib import querydb
 
-DEVICE_NAME = sys.argv[2]
+DEVICE_NAME = querydb.get_uid(sys.argv[2])
 
 
 class TestVivo(unittest.TestCase):
@@ -38,7 +38,6 @@ class TestVivo(unittest.TestCase):
 
 
     def test_imusic(self):
-        img_count = 0
         app_name = 'imusic'
 
         try:
@@ -106,7 +105,7 @@ class TestVivo(unittest.TestCase):
             if myuiautomator.in_or_not(DEVICE_NAME, u'听歌偏好') == True:
                 time.sleep(2)
                 myuiautomator.click_popup_window(DEVICE_NAME, [u'听歌偏好'])
-                time.sleep(10)
+                time.sleep(60)
                 common.screenshots(app_name, '更多-听歌偏好')
                 time.sleep(1)
                 self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
@@ -238,15 +237,6 @@ class TestVivo(unittest.TestCase):
                 common.screenshots(app_name, '我的-本地歌曲-搜索')
                 time.sleep(1)
                 self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
-                time.sleep(1)
-                self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
-                # 本地歌曲-更多
-                time.sleep(2)
-                cmd = 'input tap {0} {1}'.format(
-                    int(self.width / 100 * 92), int(self.height / 100 * 95))
-                self.device.shell(cmd)
-                time.sleep(2)
-                common.screenshots(app_name, '我的-播放歌曲列表')
                 time.sleep(1)
                 self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
                 time.sleep(1)
@@ -437,6 +427,9 @@ class TestVivo(unittest.TestCase):
                 myuiautomator.click_popup_window(DEVICE_NAME, [u'电台'])
                 time.sleep(2)
                 common.screenshots(app_name, '发现-电台')
+                cmd = 'input tap {0} {1}'.format(
+                    int(self.width / 2), int(self.height / 2 + 100))
+                self.device.shell(cmd)
                 # 电台-主题
                 time.sleep(2)
                 if myuiautomator.in_or_not(DEVICE_NAME, u'主题') == True:

@@ -11,7 +11,9 @@ from lib import common, adbtools
 
 from lib import myuiautomator
 
-DEVICE_NAME = sys.argv[2]
+from lib import querydb
+
+DEVICE_NAME = querydb.get_uid(sys.argv[2])
 
 
 class TestVivo(unittest.TestCase):
@@ -38,7 +40,6 @@ class TestVivo(unittest.TestCase):
 
 
     def test_feedback(self):
-        img_count = 0
         app_name = 'feedback'
 
         try:
@@ -50,8 +51,7 @@ class TestVivo(unittest.TestCase):
             time.sleep(1)
             self.device.start_application('com.bbk.iqoo.feedback/.activities.UserFeedBackActivity')
             time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '意见反馈')
 
             # 我的反馈
             time.sleep(10)
@@ -59,32 +59,29 @@ class TestVivo(unittest.TestCase):
                 int(self.width / 20 * 19), (int(self.height / 100 * 7)))
             self.device.shell(cmd)
             time.sleep(1)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '我的反馈')
             time.sleep(2)
             self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
             # 反馈
             time.sleep(2)
-            myuiautomator.click_popup_window(DEVICE_NAME, [u'闪退'])
-            time.sleep(1)
-            common.screenshots(app_name, img_count)
-            img_count += 1
-            time.sleep(2)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
+            if myuiautomator.in_or_not(DEVICE_NAME, u'闪退') == True:
+                myuiautomator.click_popup_window(DEVICE_NAME, [u'闪退'])
+                time.sleep(1)
+                common.screenshots(app_name, '闪退')
+                time.sleep(2)
+                self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
             # 常见帮助
             time.sleep(2)
             myuiautomator.click_popup_window(DEVICE_NAME, [u'常见帮助'])
             time.sleep(20)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '常见帮助')
             # 问题
             time.sleep(10)
             cmd = 'input tap {0} {1}'.format(
                 int(self.width / 2), (int(self.height / 2)))
             self.device.shell(cmd)
             time.sleep(1)
-            common.screenshots(app_name, img_count)
-            img_count += 1
+            common.screenshots(app_name, '问题')
 
         except Exception, ex:
             print ex
