@@ -40,12 +40,14 @@ class TestVivo(unittest.TestCase):
         app_name = 'wechat'
 
         try:
+            self.device.start_application('com.tencent.mm/.ui.LauncherUI')
+            time.sleep(1)
             cmd = 'am force-stop {0} '.format(
                 'com.tencent.mm')
             self.device.shell(cmd)
             time.sleep(1)
             self.device.start_application('com.tencent.mm/.ui.LauncherUI')
-            time.sleep(1)
+            time.sleep(9)
             common.screenshots(app_name, img_count)
             img_count += 1
             time.sleep(2)

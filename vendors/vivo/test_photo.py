@@ -45,6 +45,9 @@ class TestBrowser(unittest.TestCase):
         app_name = 'photo'
 
         try:
+            cmd = 'am start com.vivo.gallery'
+            self.device.shell(cmd)
+            time.sleep(3)
             cmd = 'am force-stop {0} '.format(
                 'com.vivo.gallery')
             self.device.shell(cmd)

@@ -42,6 +42,8 @@ class TestVivo(unittest.TestCase):
         app_name = 'isecure'
 
         try:
+            self.device.start_application('com.iqoo.secure/.MainActivity')
+            time.sleep(2)
             cmd = 'am force-stop {0} '.format(
                 'com.iqoo.secure')
             self.device.shell(cmd)

@@ -42,6 +42,8 @@ class TestVivo(unittest.TestCase):
         app_name = 'appstore'
 
         try:
+            self.device.start_application('com.bbk.appstore/.ui.AppStoreTabActivity')
+            time.sleep(10)
             cmd = 'am force-stop {0} '.format(
                 'com.bbk.appstore')
             self.device.shell(cmd)
@@ -112,8 +114,6 @@ class TestVivo(unittest.TestCase):
             time.sleep(2)
             common.screenshots(app_name, img_count)
             img_count += 1
-            time.sleep(2)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
             time.sleep(2)
             self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
             # 游戏中心-推荐-专题

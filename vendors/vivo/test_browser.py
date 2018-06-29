@@ -45,11 +45,13 @@ class TestBrowser(unittest.TestCase):
         app_name = 'browser'
 
         try:
+            self.device.start_application('com.vivo.browser/.BrowserActivity')
+            time.sleep(5)
             cmd = 'am force-stop {0} '.format(
                 'com.vivo.browser')
             self.device.shell(cmd)
             time.sleep(5)
-            self.device.start_application('com.vivo.browser/.MainActivity')
+            self.device.start_application('com.vivo.browser/.BrowserActivity')
             time.sleep(5)
             common.screenshots(app_name, img_count)
             img_count += 1

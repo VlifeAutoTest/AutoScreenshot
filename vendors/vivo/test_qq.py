@@ -42,6 +42,8 @@ class TestQq(unittest.TestCase):
         app_name = 'qq'
 
         try:
+            self.device.start_application('com.tencent.mobileqq/.activity.SplashActivity')
+            time.sleep(2)
             cmd = 'am force-stop {0} '.format(
                 'com.tencent.mobileqq')
             self.device.shell(cmd)

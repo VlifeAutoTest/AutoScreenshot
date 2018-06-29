@@ -42,6 +42,8 @@ class TestMessage(unittest.TestCase):
         app_name = 'message'
 
         try:
+            self.device.start_application('com.android.mms/.ui.ConversationList')
+            time.sleep(2)
             cmd = 'am force-stop {0} '.format(
                 'com.android.mms')
             self.device.shell(cmd)

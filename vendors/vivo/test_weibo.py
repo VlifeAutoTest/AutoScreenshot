@@ -42,6 +42,8 @@ class TestVivo(unittest.TestCase):
         app_name = 'weibo'
 
         try:
+            self.device.start_application('com.sina.weibo/.VisitorMainTabActivity')
+            time.sleep(10)
             cmd = 'am force-stop {0} '.format(
                 'com.sina.weibo')
             self.device.shell(cmd)
@@ -53,7 +55,7 @@ class TestVivo(unittest.TestCase):
 
             time.sleep(2)
             cmd = 'input tap {0} {1}'.format(
-                int(self.width / 10 * 7), (int(self.height / 5)))
+                int(self.width / 5), (int(self.height / 5)))
             self.device.shell(cmd)
             time.sleep(2)
             cmd = 'input swipe {0} {1} {2} {3} 100'.format(

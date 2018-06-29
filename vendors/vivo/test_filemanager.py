@@ -45,6 +45,8 @@ class TestBrowser(unittest.TestCase):
         app_name = 'filemanager'
 
         try:
+            self.device.start_application('com.android.filemanager/.FileManagerActivity')
+            time.sleep(2)
             cmd = 'am force-stop {0} '.format(
                 'com.android.filemanager')
             self.device.shell(cmd)

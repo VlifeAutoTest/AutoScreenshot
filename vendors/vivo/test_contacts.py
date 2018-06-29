@@ -42,6 +42,8 @@ class TestContacts(unittest.TestCase):
         app_name = 'contacts'
 
         try:
+            self.device.start_application('com.android.contacts/.DialtactsContactsEntryActivity')
+            time.sleep(2)
             cmd = 'am force-stop {0} '.format(
                 'com.android.contacts')
             self.device.shell(cmd)

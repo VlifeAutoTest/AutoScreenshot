@@ -203,17 +203,19 @@ class TestSetting(unittest.TestCase):
             self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
             time.sleep(1)
             self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
+            time.sleep(1)
+            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
 
         #     移动KTV
-            time.sleep(2)
-            myuiautomator.click_popup_window(DEVICE_NAME, [u'移动KTV'])
-            time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
-            time.sleep(1)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
-            time.sleep(1)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
+        #     time.sleep(2)
+        #     myuiautomator.click_popup_window(DEVICE_NAME, [u'移动KTV'])
+        #     time.sleep(2)
+        #     common.screenshots(app_name, img_count)
+        #     img_count += 1
+        #     time.sleep(1)
+        #     self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
+        #     time.sleep(1)
+        #     self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
 
         # 显示与亮度
             time.sleep(2)
@@ -278,126 +280,6 @@ class TestSetting(unittest.TestCase):
             time.sleep(2)
             common.screenshots(app_name, img_count)
             img_count += 1
-            # 进入账户
-            time.sleep(1)
-            cmd = 'input tap {0} {1}'.format(
-                int(self.width / 2), int(self.height / 5))
-            self.device.shell(cmd)
-            time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
-            # 查看积分
-            time.sleep(1)
-            cmd = 'input tap {0} {1}'.format(
-                int(self.width / 4), int(self.height / 10 * 3))
-            self.device.shell(cmd)
-            time.sleep(10)
-            common.screenshots(app_name, img_count)
-            img_count += 1
-            time.sleep(1)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
-            # 查看钻石
-            time.sleep(1)
-            cmd = 'input tap {0} {1}'.format(
-                int(self.width / 4 * 3), int(self.height / 10 * 3))
-            self.device.shell(cmd)
-            time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
-            # 交易记录
-            time.sleep(2)
-            myuiautomator.click_popup_window(DEVICE_NAME, [u'交易记录'])
-            time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
-            time.sleep(1)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
-            # 我的礼券
-            time.sleep(2)
-            myuiautomator.click_popup_window(DEVICE_NAME, [u'我的礼券'])
-            time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
-            time.sleep(1)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
-            time.sleep(1)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
-            # 账户与安全
-            time.sleep(2)
-            myuiautomator.click_popup_window(DEVICE_NAME, [u'帐户与安全'])
-            time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
-            # 更改密码
-            time.sleep(2)
-            myuiautomator.click_popup_window(DEVICE_NAME, [u'更改密码'])
-            time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
-            time.sleep(2)
-            myuiautomator.click_popup_window(DEVICE_NAME, [u'取消'])
-            # 找回密码
-            time.sleep(2)
-            myuiautomator.click_popup_window(DEVICE_NAME, [u'找回密码'])
-            time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
-            # 通过邮箱
-            time.sleep(2)
-            myuiautomator.click_popup_window(DEVICE_NAME, [u'通过邮箱'])
-            time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
-            time.sleep(1)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
-            time.sleep(1)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
-            time.sleep(1)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
-            # 更改密保问题
-            time.sleep(2)
-            myuiautomator.click_popup_window(DEVICE_NAME, [u'更改密保问题'])
-            time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
-            time.sleep(1)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
-            # 更改手机号
-            time.sleep(2)
-            myuiautomator.click_popup_window(DEVICE_NAME, [u'更改手机号'])
-            time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
-            time.sleep(2)
-            myuiautomator.click_popup_window(DEVICE_NAME, [u'取消'])
-            time.sleep(1)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
-            # 手机服务
-            time.sleep(2)
-            myuiautomator.click_popup_window(DEVICE_NAME, [u'手机服务'])
-            time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
-            time.sleep(1)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
-            # 云服务
-            time.sleep(2)
-            myuiautomator.click_popup_window(DEVICE_NAME, [u'云服务'])
-            time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
-            time.sleep(1)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
-            # 更多产品服务
-            time.sleep(2)
-            myuiautomator.click_popup_window(DEVICE_NAME, [u'更多产品服务'])
-            time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
-            time.sleep(1)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
-            time.sleep(1)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
             time.sleep(1)
             self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
 
@@ -478,14 +360,6 @@ class TestSetting(unittest.TestCase):
             img_count += 1
             time.sleep(1)
             self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
-            # 更换系统桌面
-            time.sleep(2)
-            myuiautomator.click_popup_window(DEVICE_NAME, [u'更换系统桌面'])
-            time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
-            time.sleep(1)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
             # 通知使用权
             time.sleep(2)
             myuiautomator.click_popup_window(DEVICE_NAME, [u'通知使用权'])
@@ -500,6 +374,8 @@ class TestSetting(unittest.TestCase):
             time.sleep(2)
             common.screenshots(app_name, img_count)
             img_count += 1
+            time.sleep(1)
+            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
             time.sleep(1)
             self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
             # 定位服务
@@ -615,30 +491,6 @@ class TestSetting(unittest.TestCase):
             time.sleep(2)
             common.screenshots(app_name, img_count)
             img_count += 1
-            time.sleep(1)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
-            # 控制中心
-            time.sleep(2)
-            myuiautomator.click_popup_window(DEVICE_NAME, [u'控制中心'])
-            time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
-            time.sleep(1)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
-            # 媒体共享
-            time.sleep(2)
-            myuiautomator.click_popup_window(DEVICE_NAME, [u'媒体共享'])
-            time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
-            # 使用说明
-            time.sleep(2)
-            myuiautomator.click_popup_window(DEVICE_NAME, [u'使用说明'])
-            time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
-            time.sleep(1)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
             time.sleep(1)
             self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
             # 虚拟专用网设置
@@ -845,8 +697,6 @@ class TestSetting(unittest.TestCase):
             time.sleep(2)
             common.screenshots(app_name, img_count)
             img_count += 1
-            time.sleep(1)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
             time.sleep(1)
             self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
             # 电子保修卡

@@ -1,3 +1,5 @@
+#! /usr/bin/python
+# -*- coding: utf-8 -*-
 __author__ = 'Administrator'
 import sys
 import time
@@ -35,36 +37,29 @@ class TestVivo(unittest.TestCase):
         time.sleep(2)
 
 
-    def test_alipay(self):
+    def test_baidu(self):
         img_count = 0
         app_name = 'baidu'
 
         try:
+            self.device.start_application('com.baidu.searchbox/.MainActivity')
+            time.sleep(10)
             cmd = 'am force-stop {0} '.format(
                 'com.baidu.searchbox')
             self.device.shell(cmd)
             time.sleep(1)
             self.device.start_application('com.baidu.searchbox/.MainActivity')
+            time.sleep(10)
+            cmd = 'input tap {0} {1}'.format(
+                int(self.width / 2), (int(self.height / 100 * 82)))
+            self.device.shell(cmd)
+            time.sleep(2)
+            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
+            time.sleep(2)
+            myuiautomator.click_popup_window(DEVICE_NAME, [u'百度'])
             time.sleep(5)
-            cmd = 'input tap {0} {1}'.format(
-                int(self.width / 5 - 20), (int(self.height / 20 * 19)))
-            self.device.shell(cmd)
-            time.sleep(1)
             common.screenshots(app_name, img_count)
             img_count += 1
-
-            time.sleep(1)
-            cmd = 'input tap {0} {1}'.format(
-                int(self.width / 5 * 4 + 20), (int(self.height / 20 * 19)))
-            self.device.shell(cmd)
-            time.sleep(2)
-            common.screenshots(app_name, img_count)
-            img_count += 1
-
-            time.sleep(2)
-            cmd = 'input tap {0} {1}'.format(
-                int(self.width / 5 - 20), (int(self.height / 20 * 19)))
-            self.device.shell(cmd)
             time.sleep(1)
             cmd = 'input tap {0} {1}'.format(
                 int(self.width / 2), (int(self.height / 2)))
@@ -72,9 +67,18 @@ class TestVivo(unittest.TestCase):
             time.sleep(5)
             common.screenshots(app_name, img_count)
             img_count += 1
+
+            time.sleep(1)
             cmd = 'input tap {0} {1}'.format(
-                int(self.width / 10 * 7), (int(self.height / 20 * 19)))
+                int(self.width / 100 * 67), (int(self.height / 100 * 99)))
             self.device.shell(cmd)
+            time.sleep(2)
+            common.screenshots(app_name, img_count)
+            img_count += 1
+            time.sleep(2)
+            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
+            time.sleep(2)
+            myuiautomator.click_popup_window(DEVICE_NAME, [u'未登录'])
             time.sleep(5)
             common.screenshots(app_name, img_count)
             img_count += 1

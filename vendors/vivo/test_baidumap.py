@@ -40,6 +40,8 @@ class TestVivo(unittest.TestCase):
         app_name = 'baidumap'
 
         try:
+            self.device.start_application('com.baidu.BaiduMap/com.baidu.baidumaps.MapsActivity')
+            time.sleep(5)
             cmd = 'am force-stop {0} '.format(
                 'com.baidu.BaiduMap')
             self.device.shell(cmd)

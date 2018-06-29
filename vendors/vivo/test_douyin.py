@@ -42,6 +42,8 @@ class TestVivo(unittest.TestCase):
         app_name = 'douyin'
 
         try:
+            self.device.start_application('com.ss.android.ugc.aweme/.main.MainActivity')
+            time.sleep(20)
             cmd = 'am force-stop {0} '.format(
                 'com.ss.android.ugc.aweme')
             self.device.shell(cmd)

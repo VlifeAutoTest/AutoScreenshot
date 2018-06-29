@@ -42,6 +42,8 @@ class TestVivo(unittest.TestCase):
         app_name = 'camera'
 
         try:
+            self.device.start_application('com.android.camera/.CameraActivity')
+            time.sleep(2)
             cmd = 'am force-stop {0} '.format(
                 'com.android.camera')
             self.device.shell(cmd)

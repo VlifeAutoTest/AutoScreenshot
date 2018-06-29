@@ -42,6 +42,8 @@ class TestVivo(unittest.TestCase):
         app_name = 'itheme'
 
         try:
+            self.device.start_application('com.bbk.theme/.Theme')
+            time.sleep(10)
             cmd = 'am force-stop {0} '.format(
                 'com.bbk.theme')
             self.device.shell(cmd)

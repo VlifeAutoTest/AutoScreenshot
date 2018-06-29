@@ -45,6 +45,8 @@ class TestBrowser(unittest.TestCase):
         app_name = 'clock'
 
         try:
+            self.device.start_application('com.android.BBKClock/.Timer')
+            time.sleep(2)
             cmd = 'am force-stop {0} '.format(
                 'com.android.BBKClock')
             self.device.shell(cmd)

@@ -43,6 +43,8 @@ class TestDial(unittest.TestCase):
         app_name = 'dial'
 
         try:
+            self.device.start_application('com.android.dialer/.BBKTwelveKeyDialer')
+            time.sleep(2)
             cmd = 'am force-stop {0} '.format(
                 'com.android.dialer')
             self.device.shell(cmd)

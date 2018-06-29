@@ -42,6 +42,8 @@ class TestVivo(unittest.TestCase):
         app_name = 'cloudmusic'
 
         try:
+            myuiautomator.click_popup_window(DEVICE_NAME, [u'网易云音乐'])
+            time.sleep(5)
             cmd = 'am force-stop {0} '.format(
                 'com.netease.cloudmusic')
             self.device.shell(cmd)

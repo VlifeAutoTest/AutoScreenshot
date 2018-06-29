@@ -40,6 +40,8 @@ class TestVivo(unittest.TestCase):
         app_name = 'meituan'
 
         try:
+            self.device.start_application('com.sankuai.meituan/com.meituan.android.pt.homepage.activity.MainActivity')
+            time.sleep(10)
             cmd = 'am force-stop {0} '.format(
                 'com.sankuai.meituan')
             self.device.shell(cmd)

@@ -45,6 +45,8 @@ class TestBrowser(unittest.TestCase):
         app_name = 'calendar'
 
         try:
+            self.device.start_application('com.bbk.calendar/.MainActivity')
+            time.sleep(2)
             cmd = 'am force-stop {0} '.format(
                 'com.bbk.calendar')
             self.device.shell(cmd)

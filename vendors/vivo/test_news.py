@@ -40,6 +40,8 @@ class TestVivo(unittest.TestCase):
         app_name = 'news'
 
         try:
+            self.device.start_application('com.ss.android.article.news/.activity.MainActivity')
+            time.sleep(10)
             cmd = 'am force-stop {0} '.format(
                 'com.ss.android.article.news')
             self.device.shell(cmd)

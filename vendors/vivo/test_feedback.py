@@ -42,6 +42,8 @@ class TestVivo(unittest.TestCase):
         app_name = 'feedback'
 
         try:
+            self.device.start_application('com.bbk.iqoo.feedback/.activities.UserFeedBackActivity')
+            time.sleep(2)
             cmd = 'am force-stop {0} '.format(
                 'com.bbk.iqoo.feedback')
             self.device.shell(cmd)

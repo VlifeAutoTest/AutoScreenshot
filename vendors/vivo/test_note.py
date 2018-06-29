@@ -42,6 +42,8 @@ class TestNote(unittest.TestCase):
         app_name = 'note'
 
         try:
+            self.device.start_application('com.android.notes/.Notes')
+            time.sleep(2)
             cmd = 'am force-stop {0} '.format(
                 'com.android.notes')
             self.device.shell(cmd)

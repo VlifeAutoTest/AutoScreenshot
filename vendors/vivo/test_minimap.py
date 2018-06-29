@@ -40,6 +40,8 @@ class TestVivo(unittest.TestCase):
         app_name = 'minimap'
 
         try:
+            self.device.start_application('com.autonavi.minimap/com.autonavi.map.activity.NewMapActivity')
+            time.sleep(2)
             cmd = 'am force-stop {0} '.format(
                 'com.autonavi.minimap')
             self.device.shell(cmd)

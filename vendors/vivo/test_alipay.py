@@ -40,6 +40,8 @@ class TestVivo(unittest.TestCase):
         app_name = 'alipay'
 
         try:
+            self.device.start_application('com.eg.android.AlipayGphone/.AlipayLogin')
+            time.sleep(5)
             cmd = 'am force-stop {0} '.format(
                 'com.eg.android.AlipayGphone')
             self.device.shell(cmd)

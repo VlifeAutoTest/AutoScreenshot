@@ -42,6 +42,8 @@ class TestVivo(unittest.TestCase):
         app_name = 'weather'
 
         try:
+            self.device.start_application('com.vivo.weather/.WeatherMain')
+            time.sleep(2)
             cmd = 'am force-stop {0} '.format(
                 'com.vivo.weather')
             self.device.shell(cmd)
@@ -69,16 +71,6 @@ class TestVivo(unittest.TestCase):
             img_count += 1
             time.sleep(2)
             self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
-            time.sleep(2)
-            self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
-            # 设置2
-            time.sleep(2)
-            cmd = 'input tap {0} {1}'.format(
-                int(self.width / 20), (int(self.height / 100 * 7)))
-            self.device.shell(cmd)
-            time.sleep(1)
-            common.screenshots(app_name, img_count)
-            img_count += 1
             time.sleep(2)
             self.device.send_keyevent(adbtools.KeyCode.KEYCODE_BACK)
 
