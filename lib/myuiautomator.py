@@ -71,12 +71,29 @@ class Element(object):
                     list.append(value)
         return list
 
+    def __elements_name(self, attrib, name, attribute='text'):
+
+        # return list with multiple same arribute
+        list = []
+        self.__uidump()
+        tree = ET.ElementTree(file=self.tempFile + "/uidump.xml")
+        treeIter = tree.iter(tag="node")
+        for elem in treeIter:
+            if elem.attrib[attrib] == name:
+                if attribute == 'text':
+                    text = elem.attrib[attribute]
+                    list.append(text)
+        return list
+
     def findElementByName(self, name, attribute='bounds'):
 
         return self.__element("text", name, attribute)
 
     def findElementsByName(self, name, attribute='bounds'):
         return self.__elements("text", name, attribute)
+
+    def in_or_notin(self, name, attribute='text'):
+        return self.__elements_name("text", name, attribute)
 
     def findElementByClass(self, className, attribute='bounds'):
 
@@ -173,6 +190,15 @@ def click_element_by_name(uid, text, index=0):
         else:
             i += 1
     return False
+
+def in_or_not(uid, text):
+    element = Element(uid)
+
+    find_eles1 = element.in_or_notin(text)
+    if text in find_eles1:
+        return True
+    else:
+        return False
 
 def get_element_attribute(uid, location_info, index, attrib):
 
