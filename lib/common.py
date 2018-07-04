@@ -6,15 +6,44 @@ import datetime
 import os
 import sys
 import time
-
-import adbtools
-from myglobal import common_config, vivo_config
-import configuration
-import ssh
-import querydb
-import myuiautomator
 import logging
 import threading
+import psutil
+import signal
+
+import adbtools
+import querydb
+from myglobal import common_config
+from myglobal import vivo_config
+import configuration
+import ssh
+import myuiautomator
+
+
+def get_all_files_in_local_dir(local_dir):
+
+    all_files = list()
+    files = os.listdir(local_dir)
+    for x in files:
+        filename = os.path.join(local_dir, x)
+        if os.path.isdir(x):
+            all_files.extend(get_all_files_in_local_dir(filename))
+        else:
+            all_files.append(filename)
+
+    return all_files
+
+
+def kill_child_processes(parent_pid, sig=signal.SIGTERM):
+
+    try:
+        p = psutil.Process(parent_pid)
+    except psutil.NoSuchProcess:
+        return
+    child_pid = p.children(recursive=True)
+
+    for pid in child_pid:
+        os.kill(pid.pid, sig)
 
 
 def get_vendor_config(vname):
@@ -61,8 +90,8 @@ def init_device_env(rid):
     # install theme tool
     app_path = os.path.join(run_path, "app", "ThemeHelper.apk").replace("\\", "/")
     pkg, mobile_path = get_vendor_config(vendor)
-    # device.uninstall(pkg)
-    # install_app(uid, app_path)
+    device.uninstall(pkg)
+    install_app(uid, app_path)
 
     # pull resource files from server to local
     ip = common_config.getValue('IMAGEHOST', 'ip')
@@ -174,9 +203,9 @@ def zip_files(rid):
         print ex
 
 
-def get_remote_path(base_dir, theme):
+def get_remote_path(base_dir, theme, app_name):
 
-    parent_path = os.path.join('/diskb' + base_dir, theme).replace("\\", '/')
+    parent_path = os.path.join('/diskb' + base_dir, theme, app_name).replace("\\", '/')
 
     info = create_remote_path(parent_path)
 
@@ -245,10 +274,10 @@ def get_image_path(remote_path, prefix, count):
     return fname, local_file, remote_file
 
 
-def get_log_path(vendor, dname):
+def create_path(vendor, dname, folder):
 
-    cur_date = datetime.datetime.now().strftime("%Y%m%d")
-    parent_path = os.path.join('log', cur_date, vendor, dname)
+    cur_date = datetime.datetime.now().strftime("%Y%m%d%H%M")
+    parent_path = os.path.join(folder, vendor, dname, cur_date)
 
     # create multi layer directory
     if not os.path.isdir(parent_path):

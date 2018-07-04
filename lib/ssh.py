@@ -55,6 +55,15 @@ class SSHAction(object):
         except Exception, ex:
             print ex
 
+    def check_path(self, file_path):
+
+        try:
+            self.sftp.stat(file_path)
+            return True
+        except Exception, ex:
+            return False
+
+
     # def upload(self, src, dst):
     #
     #     env.user = self.user

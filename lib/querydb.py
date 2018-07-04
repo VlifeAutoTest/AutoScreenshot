@@ -16,7 +16,7 @@ def get_run_info(runid, field):
     ret = ''
     try:
         # get mobile id
-        query = 'select {0}  from runinfo where run_id = {1}'.format(field, runid)
+        query = 'select {0}  from runinfo where id = {1}'.format(field, runid)
         result = db.select_one_record(query)
         ret = str(result[0][field])
     except Exception, ex:
@@ -25,17 +25,30 @@ def get_run_info(runid, field):
     return ret
 
 
-def update_run_status(runid, message, status):
+def get_app_info(app_id, field):
+
+    ret = ''
+    try:
+        # get mobile id
+        query = 'select {0}  from application where id = {1}'.format(field, app_id)
+        result = db.select_one_record(query)
+        ret = str(result[0][field])
+    except Exception, ex:
+        print ex
+
+    return ret
+
+
+def update_run_status(runid, status):
 
     try:
-        query = 'update runinfo set status = "{0}",log_path= "{1}" where run_id = {2}'.format(status, message, str(runid))
+        query = 'update runinfo set status = "{0}" where id = {1}'.format(status, str(runid))
         db.execute_update(query)
     except Exception, ex:
         print ex
 
 
 def get_all_themes_info(field):
-
 
     themes = []
     query = 'select {0} from theme'.format(field)
@@ -73,20 +86,6 @@ def get_all_application(vendor_id):
         applications.append(re['name'])
 
     return applications
-
-
-def get_run_info(runid, field):
-
-    ret = ''
-    try:
-        # get mobile id
-        query = 'select {0}  from runinfo where id = {1}'.format(field, runid)
-        result = db.select_one_record(query)
-        ret = str(result[0][field])
-    except Exception, ex:
-        print ex
-
-    return ret
 
 
 def get_uid(runid):
@@ -160,6 +159,21 @@ def get_vendor_info(vid, field):
         print ex
 
     return ret
+
+
+def get_mobile_status_info(mid, sid, field):
+
+    ret = ''
+    try:
+        # get theme name
+        query = 'select {0} from mobile_status where mobile_id = {1} and server_id = {2}'.format(field, mid, sid)
+        result = db.select_one_record(query)
+        ret = result[0][field]
+    except Exception, ex:
+        print ex
+
+    return ret
+
 
 
 if __name__ == '__main__':
