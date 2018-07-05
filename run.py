@@ -106,7 +106,7 @@ if __name__ == '__main__':
     try:
 
         # initi mobile env
-        # common.init_device_env(rid)
+        common.init_device_env(rid)
 
         # start appium
         if style == "random":
