@@ -62,6 +62,8 @@ if __name__ == '__main__':
     newParser = argparse.ArgumentParser()
     newParser.add_argument("-n", dest="rid", type=str, help="run id")
 
+
+
     args = newParser.parse_args()
     rid = args.rid
 
@@ -141,7 +143,7 @@ if __name__ == '__main__':
                     # run crawler jar
                     if style == "random":
                         local_path = common. create_path(vendor, uid, "screenshots")
-                        java_cmd = "".join(["java -jar ", jar_path, " capability appPackage=", package,
+                        java_cmd = "".join(["java -jar ", jar_path, " --capability appPackage=", package,
                                             ",appActivity=", activity, ",udid=",  uid, " -o ", local_path, " -u http://127.0.0.1:" + str(port) + "/wd/hub"])
                         run_crawler(local_path, remote_img_path, java_cmd, remote_host)
                     # run custom ui scripts
