@@ -11,6 +11,7 @@ import sys
 import subprocess
 reload(sys)
 sys.setdefaultencoding('utf8')
+import locale
 
 
 from lib import adbtools
@@ -31,6 +32,7 @@ def get_test_info(rid):
 
 def run_crawler(local_path, remote_path, cmd, host):
     ret = subprocess.Popen(cmd, shell=True)
+    encoding = locale.getdefaultlocale()[1]
     while 1:
         time.sleep(10)
         value = ret.poll()
@@ -38,7 +40,7 @@ def run_crawler(local_path, remote_path, cmd, host):
             all_files = common.get_all_files_in_local_dir(local_path)
             try:
                 for fi in all_files:
-                    fi = unicode(fi, "gbk")
+                    fi = unicode(fi, encoding)
                     filename = os.path.split(fi)[-1]
                     remote_file = os.path.join(remote_path, filename).replace("\\", "/")
                     if not host.check_path(remote_file) and os.path.splitext(filename)[-1] == ".png":
@@ -108,6 +110,8 @@ if __name__ == '__main__':
         # initi mobile env
         common.init_device_env(rid)
 
+        jar_path = os.path.join(run_path, "appcrawler-2.1.3.jar")
+
         # start appium
         if style == "random":
 
@@ -137,7 +141,7 @@ if __name__ == '__main__':
                     # run crawler jar
                     if style == "random":
                         local_path = common. create_path(vendor, uid, "screenshots")
-                        java_cmd = "".join(["java -jar appcrawler-2.1.3.jar --capability appPackage=", package,
+                        java_cmd = "".join(["java -jar ", jar_path, " capability appPackage=", package,
                                             ",appActivity=", activity, ",udid=",  uid, " -o ", local_path, " -u http://127.0.0.1:" + str(port) + "/wd/hub"])
                         run_crawler(local_path, remote_img_path, java_cmd, remote_host)
                     # run custom ui scripts
@@ -149,7 +153,6 @@ if __name__ == '__main__':
                             pytest.main('-q ' + full_path)
                         else:
                             print 'test file {0} is not found!!!!!'.format(full_path)
-
 
             else:
                 print 'theme name {0} is not found!!!!!!!!'.format(theme.encode('gbk'))
