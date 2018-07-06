@@ -172,8 +172,8 @@ if __name__ == '__main__':
         querydb.update_run_status(rid, "Failed")
 
     # close appium
-
-    common.kill_child_processes(appium.pid)
+    if style == "random":
+        common.kill_child_processes(appium.pid)
 
     # copy log file to server
 
